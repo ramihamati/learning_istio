@@ -1,0 +1,13 @@
+docker build -t learn-proxy-api:1.1 .
+docker build -t learn-weather-api:1.1 .
+
+docker network create proxynet
+docker network inspect proxynet
+
+docker run -p 3001:3001 --name weatherhost --network proxynet learn-weather-api:1.1
+docker run -p 3002:3002 --name proxyhost --network proxynet learn-proxy-api:1.1
+
+sudo lsof -i :8080
+sudo ss -tulnp | grep :8080
+sudo kill -9 <PID>
+
