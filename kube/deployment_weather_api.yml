@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weather-api
+  labels:
+    app: weather-api
+    wer.app: weather-api
+spec:
+  selector:
+    matchLabels:
+      app: weather-api
+  replicas: 1
+  template:
+    metadata:
+      labels: 
+        app: weather-api
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: weather-api
+        image: learn-weather-api:1.1
+        imagePullPolicy: Never
+        # securityContext:
+        #   runAsUser: 65534 
+        #   allowPrivilegeEscalation: false
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+          requests:
+            memory: "128Mi"
+            cpu: "75m"
+        ports:
+        - containerPort:  3001
+          name:  http
+          protocol: TCP
+        env:
+          - name: GO_APP
+            value: WEATHER_API

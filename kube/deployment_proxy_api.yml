@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxy
+  labels:
+    app: proxy
+    wer.app: proxy
+spec:
+  selector:
+    matchLabels:
+      app: proxy
+  replicas: 1
+  template:
+    metadata:
+      labels: 
+        app: proxy
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: proxy
+        image: learn-proxy-api:1.1
+        imagePullPolicy: Never
+        # securityContext:
+        #   runAsUser: 65534 
+        #   allowPrivilegeEscalation: false
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+          requests:
+            memory: "128Mi"
+            cpu: "75m"
+        ports:
+        - containerPort:  3001
+          name:  http
+          protocol: TCP
+        env:
+          - name: GO_APP
+            value : PROXY_API
+          - name: WEATHER_HOST
+            value: http://proxy.default.svc.cluster.local:3001
