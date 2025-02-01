@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: weather-api
+  namespace: meshed
   labels:
     app: weather-api
     wer.app: weather-api

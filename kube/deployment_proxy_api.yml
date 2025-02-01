@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: proxy
+  namespace: meshed
   labels:
     app: proxy
     wer.app: proxy

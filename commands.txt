@@ -1,13 +1,44 @@
-docker build -t learn-proxy-api:1.1 .
-docker build -t learn-weather-api:1.1 .
+# Build docker images
+    docker build -t learn-proxy-api:1.1 .
+    docker build -t learn-weather-api:1.1 .
 
-docker network create proxynet
-docker network inspect proxynet
+# create a network to run the containers
+    docker network create proxynet
+    docker network inspect proxynet
 
-docker run -p 3001:3001 --name weatherhost --network proxynet learn-weather-api:1.1
-docker run -p 3002:3002 --name proxyhost --network proxynet learn-proxy-api:1.1
+# run containers in the same network
+    docker run -p 3001:3001 --name weatherhost --network proxynet learn-weather-api:1.1
+    docker run -p 3002:3002 --name proxyhost --network proxynet learn-proxy-api:1.1
 
-sudo lsof -i :8080
-sudo ss -tulnp | grep :8080
-sudo kill -9 <PID>
+# Linux commands
+    sudo lsof -i :8080
+    sudo ss -tulnp | grep :8080
+    sudo kill -9 <PID>
 
+# microk9s commands
+    microk8s kubectl cluster-info
+    microk8s kubectl get pod -o widec
+    alias k='microk8s kubectl'
+    k port-forward pod/weather-api-5f89997566-8zhv5 3001
+
+
+# Load a docker image into microk8s
+  - Save the Docker image as a tar file:
+  `docker save learn-weather-api:1.1 -o learn-weather-api.tar`
+
+  - Load the image into MicroK8s
+  `microk8s ctr image import learn-weather-api.tar`
+
+  - Verify the image is now in MicroK8s
+  `microk8s ctr images list | grep learn-weather-api`
+
+# Add istio in microk8s
+
+    `microk8s enable community`
+    `microk8s enable istio``
+
+# Istio commains
+    - get istio pods
+    `k get pod -n istio-system`
+    - label namespaces where sidecars are auto injected
+    `kubectl label namespace default istio-injection=enabled`
